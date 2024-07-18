@@ -20,7 +20,7 @@ int registrar(){
 	strcpy(arquivo, cpf);														//copia as informações da variável cpf para a variável arquivo
 	//strcat(arquivo, ".txt");													//gera um arquivo com extensão .txt
 	
-	FILE *file;																	//cria um ponteiro para uma variavel do tipo FILE? - Cria um arquivo que conterá as informaçõs do BD
+	FILE *file;																	//Cria um arquivo que conterá as informaçõs do BD
 	file = fopen(arquivo, "w");													//file recebe o retorno de uma função que irá criar um arquivo cujo nome é a variavel arquivo?
 	fprintf(file, cpf);															//escreve o cpf em file
 	fclose(file);																//fecha o arquivo file
@@ -175,7 +175,7 @@ int main()
 	int opcao = 0, laco = 1;													//declaração de variáveis	
 	setlocale(LC_ALL, "Portuguese");											//localizando o texto para o portugues BR
 	
-	for(laco = 1; laco = 1;){													//inicio do laço
+	while(true){																//inicio do laço
 		
 		system("cls");
 		
@@ -193,28 +193,27 @@ int main()
 		
 		switch(opcao)															//inicio da seleção
 		{
-			case 1:
+			case 1:																//Seleciona a função para registro de clientes
 				registrar();				
 			break;
 		
-			case 2:
+			case 2:																//Seleciona a função para consulta de clientes
 				consultar();				
 			break;
 			
-			case 3:
+			case 3:																//Seleciona a função para deletar clientes
 				deletar();	
 			break;
 			
-			default:
-				if(opcao != 4){
-				
+			case 4:																//Finaliza o programa
+				return 0;
+			break;
+			
+			default:															//Se nenhum caso válido, reinicia o laço do menu
 					printf("Essa opção não está disponivel\n\n");
 					system("pause");
-				}
 			break;
 		}																		//fim da seleção
-		
-		if(opcao == 4) break;
 																			
 	}																			//fim do laço
 }																				//fim da função main
