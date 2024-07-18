@@ -148,6 +148,7 @@ int deletar(){
 	printf("### Deletar CPF ###\n\n");
 	
 	char cpf[40];
+	char confirma;
 	
 	printf("Digite o CPF a ser deletado: ");
 	scanf("%s",cpf);
@@ -160,11 +161,18 @@ int deletar(){
 		fclose(file);
 	}
 	else{
+		printf("Tem certeza que deseja deletar o CPF: %s (S/N)? ",cpf);
+		scanf(" %c", &confirma);
 		fclose(file);
-		remove(cpf);
-		printf("\nCPF %s deletado com sucesso\n\n",cpf);
 		
-	}
+			if(confirma == 's' || confirma == 'S'){
+			remove(cpf);
+			printf("\nCPF %s deletado com sucesso\n\n",cpf);
+			}
+			else{
+				printf("\nExclusão cancelada.\n\n");
+			}
+		}
 	system("pause");
 }
 
