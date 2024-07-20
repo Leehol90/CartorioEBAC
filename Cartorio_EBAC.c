@@ -4,6 +4,17 @@
 #include <string.h>		//biblioteca responsável por lidar com strings
 #include <stdbool.h>	//biblioteca para trabalhar com variaveis booleanas
 
+int login(){
+	
+	char senha[10];
+	
+	printf("Digite a senha: ");
+	scanf("%s", senha);
+	
+	return strcmp("admin", senha);
+	
+}
+
 int registrar(){
 	
 	printf("### Cadastro de nomes ###\n\n");
@@ -76,14 +87,14 @@ signed int formatarConsulta(char *dados, char texto[][50]){						//Inicio da fun
 		while(*(dados + proxVirg) != 0 && *(dados + proxVirg) != ','){			//Se a variavel de dados na posição atual for diferente de NULL e de ',' faça:
 			proxVirg++;
 		}
-		
-		if(*(dados + proxVirg) == 0) flagFim = true;							//Quando chegar no fim da variavel de dados, encerre o laço while ao fim dessa iteração
 		 
 		printf("%s: ",texto[index]);											//Imprime o texto de formatação
 		
 		for(;atualVirg < proxVirg; atualVirg++){
 			printf("%c", *(dados + atualVirg));									//Imprime as letras da variável dados separando por inicio, entre virgulas e final
 		}
+		
+		if(*(dados + proxVirg) == 0) flagFim = true;							//Quando chegar no fim da variavel de dados, encerre o laço while ao fim dessa iteração
 		
 		printf("\n");
 		proxVirg++;
@@ -109,7 +120,6 @@ int consultar(){
 			*pnt;		
 	
 	pnt = conteudo;
-	int i=0;
 	
 	printf("### Consulta de nomes ###\n\n");
 	
@@ -125,7 +135,6 @@ int consultar(){
 	else{																		//caso encotre o arquivo:
 																			
 		fgets(conteudo, 200, file);												//preenche a variável conteudo com as informações que estão no arquivo
-		printf("\n");
 		
 		if(formatarConsulta(pnt, texto) < 0){									//Chama função para formatar texto da consulta. Caso a função retorne um erro, imprima sem formatação
 			
@@ -134,11 +143,11 @@ int consultar(){
 			"\nEssa consulta será exibida sem formatação: \n\n");
 			printf("%s\n", conteudo);
 		}
-		printf("\n");
 		
 	}
 	
 	fclose(file);
+	printf("\n");
 	system("pause");
 	
 }
@@ -150,26 +159,26 @@ int deletar(){
 	char cpf[40];
 	char confirma;
 	
-	printf("Digite o CPF a ser deletado: ");
+	printf("Digite o CPF a ser deletado: ");									//digite o CPF a ser deletado
 	scanf("%s",cpf);
 	
 	FILE *file;
 	file = fopen(cpf, "r");
 	
-	if(file == NULL){
+	if(file == NULL){															//caso o CPF digitado não seja encontrado na pasta, informe o usuário
 		printf("\nNão foi possível encontrar o CPF no sistema\n\n");
 		fclose(file);
 	}
-	else{
-		printf("Tem certeza que deseja deletar o CPF: %s (S/N)? ",cpf);
+	else{																		//Caso o CPF seja encontrado:
+		printf("Tem certeza que deseja deletar o CPF: %s (S/N)? ",cpf);			//Confirma que deseja deletar o CPR?
 		scanf(" %c", &confirma);
 		fclose(file);
 		
-			if(confirma == 's' || confirma == 'S'){
+			if(confirma == 's' || confirma == 'S'){								//Se sim, delete o CPF
 			remove(cpf);
 			printf("\nCPF %s deletado com sucesso\n\n",cpf);
 			}
-			else{
+			else{																//Se não, cancele a operação
 				printf("\nExclusão cancelada.\n\n");
 			}
 		}
@@ -182,6 +191,7 @@ int main()
 	
 	int opcao = 0, laco = 1;													//declaração de variáveis	
 	setlocale(LC_ALL, "Portuguese");											//localizando o texto para o portugues BR
+	int senha = 1;
 	
 	while(true){																//inicio do laço
 		
@@ -189,10 +199,14 @@ int main()
 		
 		printf("### Cartório da EBAC ###\n\n");									//inicia o menu
 		printf("Escolha a opção desejada do menu:\n\n");
-		printf("\t1 - Registrar nomes\n");
-		printf("\t2 - Consultar nomes\n");
-		printf("\t3 - Deletar nomes\n");
-		printf("\t4 - Sair\n\n");						
+		printf("\t1 - Registrar nomes\n");										//digite 1 para registrar nomes
+		printf("\t2 - Consultar nomes\n");										//digite 2 para consultar nomes
+		printf("\t3 - Deletar nomes\n");										//digite 3 para excluir um cadastro
+		
+		if(senha != 0) printf("\t4 - Login\n");									//caso não esteja logado, digite 4 para entrar com a senha
+		else printf("\t4 - Logout\n");											//caso esteja logado, digite 4 para fazer o logout
+		
+		printf("\n\t5 - Sair\n\n");												//digite 5 para encerrar o programa					
 		printf("Opção: ");														//fim do menu
 	
 		scanf("%d", &opcao);
@@ -201,19 +215,36 @@ int main()
 		
 		switch(opcao)															//inicio da seleção
 		{
-			case 1:																//Seleciona a função para registro de clientes
-				registrar();				
+			case 1:																//Seleciona a função para registro de clientes caso esteja logado
+				if(senha == 0 ) registrar();
+				else
+				{
+					printf("Voce precisa estar logado" 
+						" para acessar esse recurso\n\n");
+					system("pause");
+				}
 			break;
 		
-			case 2:																//Seleciona a função para consulta de clientes
+			case 2:																//Seleciona a função para consulta de clientes (não é necessário login)
 				consultar();				
 			break;
 			
-			case 3:																//Seleciona a função para deletar clientes
-				deletar();	
+			case 3:																//Seleciona a função para deletar clientes caso esteja logado
+				if(senha == 0) deletar();
+				else
+				{
+					printf("Voce precisa estar logado" 
+					" para acessar esse recurso\n\n");
+					system("pause");
+				}	
 			break;
 			
-			case 4:																//Finaliza o programa
+			case 4:
+				if(senha == 0) senha = 1;										//Chama a função para fazer o login ou para o logout
+				else senha = login();
+			break;
+			
+			case 5:																//Finaliza o programa
 				return 0;
 			break;
 			
